@@ -8,22 +8,6 @@
 new Padam87\AccountBundle\Padam87AccountBundle(),
 ```
 
-### Configure doctrine
-```yml
-doctrine:
-    dbal:
-        types:
-            money: Padam87\AccountBundle\Doctrine\Type\MoneyType
-            currency: Padam87\AccountBundle\Doctrine\Type\CurrencyType
-    orm:
-        mappings:
-            Money:
-                type: xml
-                dir: "%kernel.root_dir%/../vendor/padam87/account-bundle/Resources/Money/doctrine"
-                prefix: Money
-                is_bundle: false
-```
-
 ### Configure the bundle
 ```yaml
 padam87_account:
