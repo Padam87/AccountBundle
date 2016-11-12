@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="padam87_account.transaction_listener" class="Padam87\AccountBundle\EventListener\TransactionListener">
+            <tag name="doctrine.event_subscriber" />
+        </service>
+    </services>
+</container>

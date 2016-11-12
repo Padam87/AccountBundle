@@ -1,0 +1,30 @@
+{
+  "name": "padam87/account-bundle",
+  "license": "MIT",
+  "description": "Account bundle for Symfony",
+  "keywords": [
+    "symfony",
+    "account",
+    "transaction",
+    "balance"
+  ],
+  "authors": [
+    {
+      "name": "Adam Prager",
+      "email": "prager.adam87@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"Padam87\\AccountBundle\\": ""}
+  },
+  "require": {
+    "php": "~5.5|~7.0",
+    "symfony/symfony": "~2.8|~3.0",
+    "doctrine/orm": "^2.5",
+    "doctrine/doctrine-bundle": "^1.6",
+    "moneyphp/money": "^3.0"
+  },
+  "suggest": {
+    "friendsofsymfony/user-bundle": "To create accounts automatically on registration for users"
+  }
+}

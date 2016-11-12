@@ -1,0 +1,6 @@
+<doctrine-mapping>
+    <embeddable name="Money\Money">
+        <field name="amount" type="money" precision="19" />
+        <field name="currency" type="currency" />
+    </embeddable>
+</doctrine-mapping>
