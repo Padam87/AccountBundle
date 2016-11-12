@@ -34,7 +34,7 @@ padam87_account:
     currencies: ['EUR']
     registration_listener: true # false by default
 ```
-The registration listener creates account for users on registration. Requires the [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
+The registration listener creates accounts for users on registration. Requires the [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
 
 ### Create the entities
 #### Account
@@ -104,6 +104,7 @@ class Transaction extends BaseTransaction
     ];
 }
 ```
+The `Blameable` and `Timestampable` behaviours are optional, but highly recommended. Not supported out of the box to allow you to choose your own implementation.
 
 #### User
 ```php
@@ -123,9 +124,6 @@ use Padam87\AccountBundle\Entity\UserInterface;
  */
 class User extends BaseUser implements UserInterface
 {
-    const GENDER_MALE = 'male';
-    const GENDER_FEMALE = 'female';
-
     /**
      * @var ArrayCollection|Account[]
      *
