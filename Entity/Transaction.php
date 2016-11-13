@@ -5,6 +5,7 @@ namespace Padam87\AccountBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Money\Money;
+use Symfony\Component\Asset\Exception\LogicException;
 
 /**
  * @ORM\MappedSuperclass()
@@ -67,12 +68,12 @@ abstract class Transaction
 
     public function isPositive()
     {
-        return in_array($this->getType(), self::$positiveTypes);
+        return in_array($this->getType(), static::$positiveTypes);
     }
 
     public function isNegative()
     {
-        return in_array($this->getType(), self::$negativeTypes);
+        return in_array($this->getType(), static::$negativeTypes);
     }
 
     /**
@@ -118,8 +119,12 @@ abstract class Transaction
     {
         $amount = abs($amount);
 
-        if (in_array($this->type, self::$negativeTypes)) {
-            $amount = $amount * -1;
+        if (in_array($this->type, static::$negativeTypes)) {
+            $amount = abs($amount) * -1;
+        } elseif (in_array($this->type, static::$positiveTypes)) {
+            $amount = abs($amount);
+        } else {
+            throw new \LogicException('Every transaction type must be explicitly marked as positive, or negative');
         }
 
         $this->amount = $amount;
