@@ -11,10 +11,6 @@ use Symfony\Component\Form\FormTypeExtensionInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * @DI\Service()
- * @DI\Tag("form.type_extension", attributes={"extended_type" = MoneyType::class})
- */
 class MoneyTypeExtension extends MoneyType implements FormTypeExtensionInterface
 {
     /**
