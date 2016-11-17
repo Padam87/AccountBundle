@@ -8,5 +8,8 @@
         <service id="padam87_account.transaction_listener" class="Padam87\AccountBundle\EventListener\TransactionListener">
             <tag name="doctrine.event_subscriber" />
         </service>
+        <service id="padam87_account.form.extension.money_type_extension" class="Padam87\AccountBundle\Form\Extension\MoneyTypeExtension">
+            <tag name="form.type_extension" extended-type="Symfony\Component\Form\Extension\Core\Type\MoneyType" />
+        </service>
     </services>
 </container>
