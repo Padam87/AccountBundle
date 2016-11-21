@@ -23,7 +23,7 @@ class MoneyTypeExtension extends MoneyType implements FormTypeExtensionInterface
                 ->addModelTransformer(
                     new CallbackTransformer(
                         function (Money $model = null) {
-                            return $model ? $model->getAmount() : 0;
+                            return (int) ($model ? $model->getAmount() : 0);
                         },
                         function ($form) {
                             return $form;
