@@ -39,7 +39,7 @@ class MoneyTypeExtension extends MoneyType implements FormTypeExtensionInterface
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if ($options['use_money_type']) {
+        if ($options['use_money_type'] && $form->getData() && $form->getData() instanceof Money) {
             $view->vars['money_pattern'] = self::getPattern($form->getData()->getCurrency()->getCode());
         }
     }
