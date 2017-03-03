@@ -14,28 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class Account
 {
     /**
-     * @param mixed    $user
-     * @param Currency $currency
-     */
-    public function __construct($user, Currency $currency)
-    {
-        $this->balance = new Money(0, $currency);
-        $this->user = $user;
-    }
-
-    /**
      * @var Money
      *
      * @ORM\Embedded(class=Money::class)
      */
     protected $balance;
-
-    /**
-     * @var UserInterface
-     *
-     * @ORM\ManyToOne(targetEntity=UserInterface::class, inversedBy="accounts")
-     */
-    protected $user;
 
     /**
      * @var ArrayCollection|Transaction[]
@@ -71,26 +54,6 @@ abstract class Account
     public function setBalance($balance)
     {
         $this->balance = $balance;
-
-        return $this;
-    }
-
-    /**
-     * @return UserInterface
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param UserInterface $user
-     *
-     * @return $this
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
 
         return $this;
     }

@@ -14,7 +14,6 @@ padam87_account:
     classes:
         account: AppBundle\Entity\Account
         transaction: AppBundle\Entity\Transaction
-        user: AppBundle\Entity\User
     currencies: ['EUR']
     registration_listener: true # false by default
 ```
@@ -27,7 +26,6 @@ The registration listener creates accounts for users on registration. Requires t
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Padam87\AccountBundle\Entity\Account as BaseAccount;
 
@@ -36,16 +34,33 @@ use Padam87\AccountBundle\Entity\Account as BaseAccount;
  */
 class Account extends BaseAccount
 {
-    use IdTrait;
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    protected $id;
 
     /**
-     * @return User
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity=User::class)
      */
-    public function getUser()
+    protected $user;
+    
+    /**
+     * @param User    $user
+     * @param Currency $currency
+     */
+    public function __construct(User $user, Currency $currency)
     {
-        /** @noinspection All */
-        return parent::getUser();
+        $this->balance = new Money(0, $currency);
+        $this->user = $user;
     }
+    
+    //...
 }
 ```
 
@@ -55,10 +70,7 @@ class Account extends BaseAccount
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\Blameable;
-use AppBundle\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Padam87\AccountBundle\Entity\Transaction as BaseTransaction;
 
 /**
@@ -66,10 +78,6 @@ use Padam87\AccountBundle\Entity\Transaction as BaseTransaction;
  */
 class Transaction extends BaseTransaction
 {
-    use IdTrait;
-    use Blameable;
-    use TimestampableEntity;
-
     const TYPE_DEPOSIT = 1;
     const TYPE_WITHDRAWAL = 2;
 
@@ -86,9 +94,21 @@ class Transaction extends BaseTransaction
     public static $negativeTypes = [
         self::TYPE_WITHDRAWAL
     ];
+    
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    protected $id;
+    
+    //...
 }
 ```
-The `Blameable` and `Timestampable` behaviours are optional, but highly recommended. Not supported out of the box to allow you to choose your own implementation.
+`Blameable` and `Timestampable` behaviours are highly recommended.
+Not supported out of the box to allow you to choose your own implementation.
 
 #### User
 ```php
@@ -99,14 +119,12 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Padam87\AccountBundle\Entity\UserInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User extends BaseUser implements UserInterface
+class User extends BaseUser
 {
     /**
      * @var ArrayCollection|Account[]
