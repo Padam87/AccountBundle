@@ -7,8 +7,7 @@ use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Money\Currency;
-use Padam87\AccountBundle\Entity\Account;
-use Padam87\AccountBundle\Entity\UserInterface;
+use Padam87\AccountBundle\Entity\AccountHolderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RegistrationListener implements EventSubscriberInterface
@@ -50,9 +49,10 @@ class RegistrationListener implements EventSubscriberInterface
     {
         $user = $event->getUser();
 
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof AccountHolderInterface) {
             throw new \LogicException(
-                'Your User class must implement the UserInterface provided by the bundle to use the RegistrationListener'
+                'Your User class must implement the AccountHolderInterface
+                provided by the bundle to use the RegistrationListener'
             );
         }
 

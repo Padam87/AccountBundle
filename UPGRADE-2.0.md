@@ -1,6 +1,6 @@
 # Changes
 - `Account#user` property has been removed to allow accounts for other entities
-- `UserInterface` has been removed
+- `UserInterface` has been renamed to `AccountHolderInterface`
 
 # Upgrade guide:
 - Remove the user class from the bundle's configuration:
@@ -24,7 +24,7 @@ padam87_account:
     registration_listener: true # false by default
 ```
 
-- Remove the `UserInterface` from your user class
+- Change the `UserInterface` to `AccountHolderInterface` on your user class
 - Add the `user` relation to your `Account` entity
 - Add a constructor to your `Account` entity
 
