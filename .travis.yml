@@ -15,7 +15,7 @@ before_script:
   - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
   - composer update --dev
 
-script: phpunit
+script: vendor/bin/phpunit
 
 notifications:
   email:
