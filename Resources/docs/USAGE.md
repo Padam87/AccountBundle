@@ -16,10 +16,10 @@ Add `1 EUR` to the user's balance
 ```php
 $em = $this->getDoctrine()->getManager();
 $user = $this->getUser();
-$account = $user->getAccount('EUR');
 
-if ($account === null) {
-    $account = new Account($user, new Currency('EUR'));
+if (null === $account = $user->getAccount('EUR')) {
+    $account = new Account(new Currency('EUR'));
+    
     $user->addAccount($account);
     
     $em->persist($account);

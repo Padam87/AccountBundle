@@ -7,21 +7,33 @@ use Doctrine\Common\Collections\ArrayCollection;
 interface AccountHolderInterface
 {
     /**
-     * @return Account[]|ArrayCollection
+     * @return string
+     */
+    public function getAccountClass();
+
+    /**
+     * @param $currencyCode
+     *
+     * @return AccountInterface|null
+     */
+    public function getAccount($currencyCode);
+
+    /**
+     * @return AccountInterface[]|ArrayCollection
      */
     public function getAccounts();
 
     /**
-     * @param Account[]|ArrayCollection $accounts
+     * @param AccountInterface[]|ArrayCollection $accounts
      *
      * @return $this
      */
     public function setAccounts($accounts);
 
     /**
-     * @param Account $account
+     * @param AccountInterface $account
      *
      * @return $this
      */
-    public function addAccount($account);
+    public function addAccount(AccountInterface $account);
 }

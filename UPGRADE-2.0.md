@@ -10,32 +10,20 @@ padam87_account:
     classes:
         account: AppBundle\Entity\Account
         transaction: AppBundle\Entity\Transaction
-        user: AppBundle\Entity\User
-    currencies: ['EUR']
-    registration_listener: true # false by default
-```
-
-```yaml
-padam87_account:
-    classes:
-        account: AppBundle\Entity\Account
-        transaction: AppBundle\Entity\Transaction
+        #user: AppBundle\Entity\User
     currencies: ['EUR']
     registration_listener: true # false by default
 ```
 
 - Change the `UserInterface` to `AccountHolderInterface` on your user class
 - Add the `user` relation to your `Account` entity
-- Add a constructor to your `Account` entity
-
+- Change the instanciation of the `Account` entity
 ```php
-    /**
-     * @param User    $user
-     * @param Currency $currency
-     */
-    public function __construct(User $user, Currency $currency)
-    {
-        $this->balance = new Money(0, $currency);
-        $this->user = $user;
-    }
+$account = new Account($user, new Currency('EUR'));
+
+// to
+
+$account = new Account(new Currency('EUR'));
+$account->setUser($user);
 ```
+- Update the methods to comply with the new `AccountInterface`

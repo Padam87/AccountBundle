@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\MappedSuperclass()
  */
-abstract class Account
+abstract class Account implements AccountInterface
 {
     /**
      * @var Money
@@ -29,7 +29,15 @@ abstract class Account
     protected $transactions;
 
     /**
-     * @return Currency
+     * @param Currency $currency
+     */
+    public function __construct(Currency $currency)
+    {
+        $this->balance = new Money(0, $currency);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getCurrency()
     {
@@ -37,7 +45,7 @@ abstract class Account
     }
 
     /**
-     * @return Money
+     * {@inheritdoc}
      */
     public function getBalance()
     {
@@ -45,16 +53,20 @@ abstract class Account
     }
 
     /**
-     * @internal Should only be modified by Transactions, don't call otherwise
-     *
-     * @param Money $balance
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setBalance($balance)
+    public function setBalance(Money $balance)
     {
         $this->balance = $balance;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Transaction[]
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 }

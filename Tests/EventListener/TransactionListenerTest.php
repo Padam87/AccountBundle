@@ -51,7 +51,8 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
     public function shouldUpdateAccountBalance()
     {
         $user = m::mock(User::class);
-        $account = new Account($user, new Currency('EUR'));
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
 
         list($uow, $em, $args) = $this->getBaseMocks(
             $account,
@@ -73,7 +74,8 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
     public function shouldBeAbleToProcessMultipleTransactions()
     {
         $user = m::mock(User::class);
-        $account = new Account($user, new Currency('EUR'));
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
 
         list($uow, $em, $args) = $this->getBaseMocks(
             $account,
@@ -99,7 +101,9 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
     public function shouldNotAllowUpdates()
     {
         $user = m::mock(User::class);
-        $account = new Account($user, new Currency('EUR'));
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
+
         $transactions = [
             new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
         ];
@@ -125,7 +129,9 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
     public function shouldNotAllowDeletions()
     {
         $user = m::mock(User::class);
-        $account = new Account($user, new Currency('EUR'));
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
+
         $transactions = [
             new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
         ];

@@ -28,6 +28,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Padam87\AccountBundle\Entity\Account as BaseAccount;
+use Padam87\AccountBundle\Entity\AccountHolderInterface;
 
 /**
  * @ORM\Entity()
@@ -42,22 +43,44 @@ class Account extends BaseAccount
      * @ORM\GeneratedValue
      */
     protected $id;
-
+    
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="accounts")
      */
     protected $user;
-    
+
     /**
-     * @param User    $user
-     * @param Currency $currency
+     * @return User
      */
-    public function __construct(User $user, Currency $currency)
+    public function getUser()
     {
-        $this->balance = new Money(0, $currency);
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function setUser(User $user)
+    {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAccountHolder(AccountHolderInterface $accountHolder)
+    {
+        if (!$accountHolder instanceof User) {
+            throw new \LogicException();
+        }
+
+        return $this->setUser($accountHolder);
     }
     
     //...
@@ -119,6 +142,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use Padam87\AccountBundle\Entity\AccountInterface;
 
 /**
  * @ORM\Entity
@@ -132,11 +156,17 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity=Account::class, mappedBy="user")
      */
     protected $accounts;
+    
+    /**
+     * @return string
+     */
+    public function getAccountClass()
+    {
+        return Account::class;
+    }
 
     /**
-     * @param string $currencyCode
-     *
-     * @return Account|null
+     * {@inheritdoc}
      */
     public function getAccount($currencyCode = 'EUR')
     {
@@ -162,7 +192,11 @@ class User extends BaseUser
      */
     public function setAccounts($accounts)
     {
-        $this->accounts = $accounts;
+        $this->accounts = [];
+
+        foreach ($accounts as $account) {
+            $this->addAccount($account);
+        }
 
         return $this;
     }
@@ -170,11 +204,11 @@ class User extends BaseUser
     /**
      * {@inheritdoc}
      */
-    public function addAccount($account)
+    public function addAccount(AccountInterface $account)
     {
         $this->accounts[] = $account;
 
-        $account->setUser($this);
+        $account->setAccountHolder($this);
 
         return $this;
     }

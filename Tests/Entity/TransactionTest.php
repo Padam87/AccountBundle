@@ -25,7 +25,8 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
     public function shouldEnforceNegativeTypes()
     {
         $user = m::mock(User::class);
-        $account = new Account($user, new Currency('EUR'));
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
 
         $transaction1 = new Transaction($account, 100, Transaction::TYPE_WITHDRAWAL);
         $transaction2 = new Transaction($account, -100, Transaction::TYPE_WITHDRAWAL);
@@ -40,7 +41,8 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
     public function shouldEnforcePositiveTypes()
     {
         $user = m::mock(User::class);
-        $account = new Account($user, new Currency('EUR'));
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
 
         $transaction1 = new Transaction($account, 100, Transaction::TYPE_DEPOSIT);
         $transaction2 = new Transaction($account, -100, Transaction::TYPE_DEPOSIT);
@@ -56,7 +58,8 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
     public function shouldForceTransactionTypeSelection()
     {
         $user = m::mock(User::class);
-        $account = new Account($user, new Currency('EUR'));
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
 
         new Transaction($account, 100, Transaction::TYPE_UNKNOWN);
     }

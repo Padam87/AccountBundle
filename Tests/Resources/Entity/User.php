@@ -3,9 +3,19 @@
 namespace Padam87\AccountBundle\Tests\Resources\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Padam87\AccountBundle\Entity\AccountHolderInterface;
+use Padam87\AccountBundle\Entity\AccountInterface;
 
-class User
+class User implements AccountHolderInterface
 {
+    /**
+     * @return string
+     */
+    public function getAccountClass()
+    {
+        return Account::class;
+    }
+
     /**
      * @var ArrayCollection|Account[]
      *
@@ -42,7 +52,11 @@ class User
      */
     public function setAccounts($accounts)
     {
-        $this->accounts = $accounts;
+        $this->accounts = [];
+
+        foreach ($accounts as $account) {
+            $this->addAccount($account);
+        }
 
         return $this;
     }
@@ -50,11 +64,11 @@ class User
     /**
      * {@inheritdoc}
      */
-    public function addAccount($account)
+    public function addAccount(AccountInterface $account)
     {
         $this->accounts[] = $account;
 
-        $account->setUser($this);
+        $account->setAccountHolder($this);
 
         return $this;
     }

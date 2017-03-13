@@ -4,6 +4,8 @@ namespace Padam87\AccountBundle\Tests\Resources\Entity;
 
 use Money\Currency;
 use Money\Money;
+use Padam87\AccountBundle\Entity\AccountHolderInterface;
+use Padam87\AccountBundle\Entity\AccountInterface;
 use Padam87\AccountBundle\Entity\UserInterface;
 
 class Account extends \Padam87\AccountBundle\Entity\Account
@@ -23,16 +25,6 @@ class Account extends \Padam87\AccountBundle\Entity\Account
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     protected $user;
-
-    /**
-     * @param User    $user
-     * @param Currency $currency
-     */
-    public function __construct(User $user, Currency $currency)
-    {
-        $this->balance = new Money(0, $currency);
-        $this->user = $user;
-    }
 
     /**
      * @return int
@@ -60,5 +52,15 @@ class Account extends \Padam87\AccountBundle\Entity\Account
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @param AccountHolderInterface $accountHolder
+     *
+     * @return $this
+     */
+    public function setAccountHolder(AccountHolderInterface $accountHolder)
+    {
+        return $this->setUser($accountHolder);
     }
 }
