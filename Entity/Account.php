@@ -11,31 +11,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\MappedSuperclass()
  */
-abstract class Account
+abstract class Account implements AccountInterface
 {
-    /**
-     * @param mixed    $user
-     * @param Currency $currency
-     */
-    public function __construct($user, Currency $currency)
-    {
-        $this->balance = new Money(0, $currency);
-        $this->user = $user;
-    }
-
     /**
      * @var Money
      *
      * @ORM\Embedded(class=Money::class)
      */
     protected $balance;
-
-    /**
-     * @var UserInterface
-     *
-     * @ORM\ManyToOne(targetEntity=UserInterface::class, inversedBy="accounts")
-     */
-    protected $user;
 
     /**
      * @var ArrayCollection|Transaction[]
@@ -46,7 +29,15 @@ abstract class Account
     protected $transactions;
 
     /**
-     * @return Currency
+     * @param Currency $currency
+     */
+    public function __construct(Currency $currency)
+    {
+        $this->balance = new Money(0, $currency);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getCurrency()
     {
@@ -54,7 +45,7 @@ abstract class Account
     }
 
     /**
-     * @return Money
+     * {@inheritdoc}
      */
     public function getBalance()
     {
@@ -62,13 +53,9 @@ abstract class Account
     }
 
     /**
-     * @internal Should only be modified by Transactions, don't call otherwise
-     *
-     * @param Money $balance
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setBalance($balance)
+    public function setBalance(Money $balance)
     {
         $this->balance = $balance;
 
@@ -76,22 +63,10 @@ abstract class Account
     }
 
     /**
-     * @return UserInterface
+     * @return ArrayCollection|Transaction[]
      */
-    public function getUser()
+    public function getTransactions()
     {
-        return $this->user;
-    }
-
-    /**
-     * @param UserInterface $user
-     *
-     * @return $this
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
+        return $this->transactions;
     }
 }

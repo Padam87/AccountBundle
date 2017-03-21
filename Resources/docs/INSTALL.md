@@ -14,7 +14,6 @@ padam87_account:
     classes:
         account: AppBundle\Entity\Account
         transaction: AppBundle\Entity\Transaction
-        user: AppBundle\Entity\User
     currencies: ['EUR']
     registration_listener: true # false by default
 ```
@@ -27,25 +26,64 @@ The registration listener creates accounts for users on registration. Requires t
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Padam87\AccountBundle\Entity\Account as BaseAccount;
+use Padam87\AccountBundle\Entity\AccountHolderInterface;
 
 /**
  * @ORM\Entity()
  */
 class Account extends BaseAccount
 {
-    use IdTrait;
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    protected $id;
+    
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="accounts")
+     */
+    protected $user;
 
     /**
      * @return User
      */
     public function getUser()
     {
-        /** @noinspection All */
-        return parent::getUser();
+        return $this->user;
     }
+
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAccountHolder(AccountHolderInterface $accountHolder)
+    {
+        if (!$accountHolder instanceof User) {
+            throw new \LogicException();
+        }
+
+        return $this->setUser($accountHolder);
+    }
+    
+    //...
 }
 ```
 
@@ -55,10 +93,7 @@ class Account extends BaseAccount
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\Blameable;
-use AppBundle\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Padam87\AccountBundle\Entity\Transaction as BaseTransaction;
 
 /**
@@ -66,10 +101,6 @@ use Padam87\AccountBundle\Entity\Transaction as BaseTransaction;
  */
 class Transaction extends BaseTransaction
 {
-    use IdTrait;
-    use Blameable;
-    use TimestampableEntity;
-
     const TYPE_DEPOSIT = 1;
     const TYPE_WITHDRAWAL = 2;
 
@@ -86,9 +117,21 @@ class Transaction extends BaseTransaction
     public static $negativeTypes = [
         self::TYPE_WITHDRAWAL
     ];
+    
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    protected $id;
+    
+    //...
 }
 ```
-The `Blameable` and `Timestampable` behaviours are optional, but highly recommended. Not supported out of the box to allow you to choose your own implementation.
+`Blameable` and `Timestampable` behaviours are highly recommended.
+Not supported out of the box to allow you to choose your own implementation.
 
 #### User
 ```php
@@ -99,14 +142,13 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Padam87\AccountBundle\Entity\UserInterface;
+use Padam87\AccountBundle\Entity\AccountInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User extends BaseUser implements UserInterface
+class User extends BaseUser
 {
     /**
      * @var ArrayCollection|Account[]
@@ -114,11 +156,17 @@ class User extends BaseUser implements UserInterface
      * @ORM\OneToMany(targetEntity=Account::class, mappedBy="user")
      */
     protected $accounts;
+    
+    /**
+     * @return string
+     */
+    public function getAccountClass()
+    {
+        return Account::class;
+    }
 
     /**
-     * @param string $currencyCode
-     *
-     * @return Account|null
+     * {@inheritdoc}
      */
     public function getAccount($currencyCode = 'EUR')
     {
@@ -144,7 +192,11 @@ class User extends BaseUser implements UserInterface
      */
     public function setAccounts($accounts)
     {
-        $this->accounts = $accounts;
+        $this->accounts = [];
+
+        foreach ($accounts as $account) {
+            $this->addAccount($account);
+        }
 
         return $this;
     }
@@ -152,11 +204,11 @@ class User extends BaseUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function addAccount($account)
+    public function addAccount(AccountInterface $account)
     {
         $this->accounts[] = $account;
 
-        $account->setUser($this);
+        $account->setAccountHolder($this);
 
         return $this;
     }

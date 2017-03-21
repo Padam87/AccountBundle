@@ -26,7 +26,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('account')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('transaction')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('user')->isRequired()->cannotBeEmpty()->end()
                     ->end()
                     ->isRequired()
                     ->cannotBeEmpty()

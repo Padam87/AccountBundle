@@ -13,6 +13,7 @@ use Padam87\AccountBundle\Entity\UserInterface;
 use Padam87\AccountBundle\EventListener\TransactionListener;
 use Padam87\AccountBundle\Tests\Resources\Entity\Account;
 use Padam87\AccountBundle\Tests\Resources\Entity\Transaction;
+use Padam87\AccountBundle\Tests\Resources\Entity\User;
 
 class TransactionListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,8 +50,9 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldUpdateAccountBalance()
     {
-        $user = m::mock(UserInterface::class);
-        $account = new Account($user, new Currency('EUR'));
+        $user = m::mock(User::class);
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
 
         list($uow, $em, $args) = $this->getBaseMocks(
             $account,
@@ -71,8 +73,9 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldBeAbleToProcessMultipleTransactions()
     {
-        $user = m::mock(UserInterface::class);
-        $account = new Account($user, new Currency('EUR'));
+        $user = m::mock(User::class);
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
 
         list($uow, $em, $args) = $this->getBaseMocks(
             $account,
@@ -97,8 +100,10 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotAllowUpdates()
     {
-        $user = m::mock(UserInterface::class);
-        $account = new Account($user, new Currency('EUR'));
+        $user = m::mock(User::class);
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
+
         $transactions = [
             new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
         ];
@@ -123,8 +128,10 @@ class TransactionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotAllowDeletions()
     {
-        $user = m::mock(UserInterface::class);
-        $account = new Account($user, new Currency('EUR'));
+        $user = m::mock(User::class);
+        $account = new Account(new Currency('EUR'));
+        $account->setUser($user);
+
         $transactions = [
             new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
         ];

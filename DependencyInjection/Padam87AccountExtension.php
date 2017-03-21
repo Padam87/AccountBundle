@@ -6,7 +6,6 @@ use Padam87\AccountBundle\Doctrine\Type\CurrencyType;
 use Padam87\AccountBundle\Doctrine\Type\MoneyType;
 use Padam87\AccountBundle\Entity\Account;
 use Padam87\AccountBundle\Entity\Transaction;
-use Padam87\AccountBundle\Entity\UserInterface;
 use Padam87\AccountBundle\EventListener\RegistrationListener;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -68,7 +67,6 @@ class Padam87AccountExtension extends Extension implements PrependExtensionInter
                     'resolve_target_entities' => [
                         Account::class => $config['classes']['account'],
                         Transaction::class => $config['classes']['transaction'],
-                        UserInterface::class => $config['classes']['user'],
                     ],
                     'mappings' => [
                         'Money' => [

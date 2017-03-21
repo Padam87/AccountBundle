@@ -5,7 +5,6 @@ namespace Padam87\AccountBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Money\Money;
-use Symfony\Component\Asset\Exception\LogicException;
 
 /**
  * @ORM\MappedSuperclass()

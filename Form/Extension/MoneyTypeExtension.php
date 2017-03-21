@@ -2,6 +2,7 @@
 
 namespace Padam87\AccountBundle\Form\Extension;
 
+use Money\Currency;
 use Money\Money;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -25,8 +26,12 @@ class MoneyTypeExtension extends MoneyType implements FormTypeExtensionInterface
                         function (Money $model = null) {
                             return (int) ($model ? $model->getAmount() : 0);
                         },
-                        function ($form) {
-                            return $form;
+                        function ($form) use ($options) {
+                            if (!$options['reverse_transform']) {
+                                return $form;
+                            }
+
+                            return new Money($form, new Currency($options['currency']));
                         }
                     )
                 )
@@ -54,6 +59,7 @@ class MoneyTypeExtension extends MoneyType implements FormTypeExtensionInterface
                 [
                     'divisor' => 100,
                     'use_money_type' => true,
+                    'reverse_transform' => false,
                 ]
             )
         ;
