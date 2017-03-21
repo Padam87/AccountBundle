@@ -58,7 +58,7 @@ class RegistrationListener implements EventSubscriberInterface
 
         /** @var EntityManager $em */
         $em = $this->doctrine->getManager();
-        $accountClass = $this->config['classes']['account'];
+        $accountClass = $user->getAccountClass();
         foreach ($this->config['currencies'] as $currency) {
             $account = new $accountClass($user, new Currency($currency));
             $user->addAccount($account);
