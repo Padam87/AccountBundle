@@ -8,6 +8,7 @@ use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Money\Currency;
 use Padam87\AccountBundle\Entity\AccountHolderInterface;
+use Padam87\AccountBundle\Entity\AccountInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RegistrationListener implements EventSubscriberInterface
@@ -60,7 +61,10 @@ class RegistrationListener implements EventSubscriberInterface
         $em = $this->doctrine->getManager();
         $accountClass = $user->getAccountClass();
         foreach ($this->config['currencies'] as $currency) {
-            $account = new $accountClass($user, new Currency($currency));
+            /** @var AccountInterface $account */
+            $account = new $accountClass(new Currency($currency));
+            $account->setAccountHolder($user);
+
             $user->addAccount($account);
 
             $em->persist($account);
