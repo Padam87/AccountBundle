@@ -38,8 +38,16 @@ class Padam87AccountExtension extends Extension implements PrependExtensionInter
                 (new Definition(RegistrationListener::class))
                     ->addTag('kernel.event_subscriber')
                     ->addArgument(new Reference('doctrine'))
+                    ->addArgument(new Reference('padam87_account.accountant'))
                     ->addArgument($config)
             );
+        }
+
+        if ($config['accountant']) {
+            if ($config['accountant']['class']) {
+                $definition = $container->getDefinition('padam87_account.accountant');
+                $definition->setClass($config['accountant']['class']);
+            }
         }
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
