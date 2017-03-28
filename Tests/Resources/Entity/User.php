@@ -9,19 +9,24 @@ use Padam87\AccountBundle\Entity\AccountInterface;
 class User implements AccountHolderInterface
 {
     /**
+     * @var ArrayCollection|Account[]
+     *
+     * @ORM\OneToMany(targetEntity=Account::class, mappedBy="user")
+     */
+    protected $accounts;
+
+    public function __construct()
+    {
+        $this->accounts = new ArrayCollection();
+    }
+
+    /**
      * @return string
      */
     public function getAccountClass()
     {
         return Account::class;
     }
-
-    /**
-     * @var ArrayCollection|Account[]
-     *
-     * @ORM\OneToMany(targetEntity=Account::class, mappedBy="user")
-     */
-    protected $accounts;
 
     /**
      * @param string $currencyCode

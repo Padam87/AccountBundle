@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('class')->defaultNull()->end()
                     ->end()
+                    ->addDefaultsIfNotSet()
                 ->end()
             ->end()
         ;

@@ -7,6 +7,7 @@ use Padam87\AccountBundle\Doctrine\Type\MoneyType;
 use Padam87\AccountBundle\Entity\Account;
 use Padam87\AccountBundle\Entity\Transaction;
 use Padam87\AccountBundle\EventListener\RegistrationListener;
+use Padam87\AccountBundle\Service\Accountant;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
@@ -24,7 +25,7 @@ class Padam87AccountExtension extends Extension implements PrependExtensionInter
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $bundles = $container->getParameter('kernel.bundles');
+        $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
 
         $container->setParameter('padam87_account_config', $config);
 
@@ -42,6 +43,11 @@ class Padam87AccountExtension extends Extension implements PrependExtensionInter
                     ->addArgument($config)
             );
         }
+
+        $container->setDefinition(
+            'padam87_account.accountant',
+            new Definition(Accountant::class)
+        );
 
         if ($config['accountant']) {
             if ($config['accountant']['class']) {
