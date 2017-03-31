@@ -25,10 +25,10 @@
     "moneyphp/money": "^3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.0",
+    "phpunit/phpunit": "^5.0|^6.0",
     "mockery/mockery": "^0.9",
     "friendsofsymfony/user-bundle": "v2.0.0-beta1",
-    "matthiasnoback/symfony-dependency-injection-test": "^2.0"
+    "matthiasnoback/symfony-dependency-injection-test": "^1.0|^2.0"
   },
   "suggest": {
     "friendsofsymfony/user-bundle": "To create accounts automatically on registration for users"
