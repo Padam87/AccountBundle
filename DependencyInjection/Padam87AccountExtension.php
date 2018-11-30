@@ -2,17 +2,13 @@
 
 namespace Padam87\AccountBundle\DependencyInjection;
 
-use Padam87\AccountBundle\Doctrine\Type\CurrencyType;
-use Padam87\AccountBundle\Doctrine\Type\MoneyType;
 use Padam87\AccountBundle\Entity\Account;
 use Padam87\AccountBundle\Entity\Transaction;
-use Padam87\AccountBundle\EventListener\RegistrationListener;
 use Padam87\AccountBundle\Service\Accountant;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -55,25 +51,11 @@ class Padam87AccountExtension extends Extension implements PrependExtensionInter
         $container->prependExtensionConfig(
             'doctrine',
             [
-                'dbal' => [
-                    'types' => [
-                        'money' => MoneyType::class,
-                        'currency' => CurrencyType::class,
-                    ]
-                ],
                 'orm' => [
                     'resolve_target_entities' => [
                         Account::class => $config['classes']['account'],
                         Transaction::class => $config['classes']['transaction'],
                     ],
-                    'mappings' => [
-                        'Money' => [
-                            'type' => 'xml',
-                            'dir' => '%kernel.root_dir%/../vendor/padam87/account-bundle/Resources/Money/doctrine',
-                            'prefix' => 'Money',
-                            'is_bundle' => false,
-                        ]
-                    ]
                 ]
             ]
         );

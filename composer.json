@@ -22,7 +22,7 @@
     "symfony/symfony": "~3.4|~4.0",
     "doctrine/orm": "^2.5",
     "doctrine/doctrine-bundle": "^1.6",
-    "moneyphp/money": "^3.0"
+    "padam87/money-bundle": "^0.2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.0|^6.0",

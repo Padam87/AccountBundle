@@ -30,16 +30,3 @@ $transaction = new Transaction($account, 100, Transaction::TYPE_DEPOSIT);
 $em->persist($transaction);
 $em->flush();
 ```
-
-#### Forms
-Thanks to the [MoneyTypeExtension](../../Form/Extension/MoneyTypeExtension.php), Symfony's money type will now be able to handle `Money` objects directly.
-
-```php
-$builder->add('price', MoneyType::class)
-```
-
-You can still use the standard behavior, which accepts numeric values only by turning this option off.
-
-```php
-$builder->add('price', MoneyType::class, ['use_money_type' => false])
-```
