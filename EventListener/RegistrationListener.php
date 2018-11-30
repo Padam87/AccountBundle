@@ -9,6 +9,7 @@ use FOS\UserBundle\FOSUserEvents;
 use Money\Currency;
 use Padam87\AccountBundle\Entity\AccountHolderInterface;
 use Padam87\AccountBundle\Entity\AccountInterface;
+use Padam87\AccountBundle\Service\Accountant;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RegistrationListener implements EventSubscriberInterface
@@ -24,6 +25,11 @@ class RegistrationListener implements EventSubscriberInterface
     private $config;
 
     /**
+     * @var Accountant
+     */
+    private $accountant;
+
+    /**
      * {@inheritdoc}
      */
     public static function getSubscribedEvents()
@@ -34,12 +40,14 @@ class RegistrationListener implements EventSubscriberInterface
     }
 
     /**
-     * @param Registry $doctrine
-     * @param array    $config
+     * @param Registry   $doctrine
+     * @param Accountant $accountant
+     * @param array      $config
      */
-    public function __construct(Registry $doctrine, array $config)
+    public function __construct(Registry $doctrine, Accountant $accountant, array $config)
     {
         $this->doctrine = $doctrine;
+        $this->accountant = $accountant;
         $this->config = $config;
     }
 
@@ -59,13 +67,9 @@ class RegistrationListener implements EventSubscriberInterface
 
         /** @var EntityManager $em */
         $em = $this->doctrine->getManager();
-        $accountClass = $user->getAccountClass();
-        foreach ($this->config['currencies'] as $currency) {
-            /** @var AccountInterface $account */
-            $account = new $accountClass(new Currency($currency));
-            $account->setAccountHolder($user);
 
-            $user->addAccount($account);
+        foreach ($this->config['currencies'] as $currency) {
+            $account = $this->accountant->getOrCreateAccount($user, new Currency($currency));
 
             $em->persist($account);
         }

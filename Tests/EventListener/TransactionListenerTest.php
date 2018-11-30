@@ -14,8 +14,9 @@ use Padam87\AccountBundle\EventListener\TransactionListener;
 use Padam87\AccountBundle\Tests\Resources\Entity\Account;
 use Padam87\AccountBundle\Tests\Resources\Entity\Transaction;
 use Padam87\AccountBundle\Tests\Resources\Entity\User;
+use PHPUnit\Framework\TestCase;
 
-class TransactionListenerTest extends \PHPUnit_Framework_TestCase
+class TransactionListenerTest extends TestCase
 {
     public function tearDown()
     {

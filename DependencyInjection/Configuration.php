@@ -37,6 +37,12 @@ class Configuration implements ConfigurationInterface
                 ->booleanNode('registration_listener')
                     ->defaultFalse()
                 ->end()
+                ->arrayNode('accountant')
+                    ->children()
+                        ->scalarNode('class')->defaultNull()->end()
+                    ->end()
+                    ->addDefaultsIfNotSet()
+                ->end()
             ->end()
         ;
 

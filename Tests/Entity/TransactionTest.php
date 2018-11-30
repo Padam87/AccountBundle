@@ -9,8 +9,9 @@ use Padam87\AccountBundle\Entity\UserInterface;
 use Padam87\AccountBundle\Tests\Resources\Entity\Account;
 use Padam87\AccountBundle\Tests\Resources\Entity\Transaction;
 use Padam87\AccountBundle\Tests\Resources\Entity\User;
+use PHPUnit\Framework\TestCase;
 
-class TransactionTest extends \PHPUnit_Framework_TestCase
+class TransactionTest extends TestCase
 {
     public function tearDown()
     {
