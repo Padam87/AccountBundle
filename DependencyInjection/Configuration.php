@@ -30,12 +30,6 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
-                ->arrayNode('accountant')
-                    ->children()
-                        ->scalarNode('class')->defaultNull()->end()
-                    ->end()
-                    ->addDefaultsIfNotSet()
-                ->end()
             ->end()
         ;
 

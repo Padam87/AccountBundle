@@ -8,5 +8,6 @@
         <service id="padam87_account.transaction_listener" class="Padam87\AccountBundle\EventListener\TransactionListener">
             <tag name="doctrine.event_subscriber" />
         </service>
+        <service id="padam87_account.accountant" class="Padam87\AccountBundle\Service\Accountant" />
     </services>
 </container>
