@@ -2,38 +2,20 @@
 
 namespace Padam87\AccountBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 interface AccountHolderInterface
 {
-    /**
-     * @return string
-     */
-    public function getAccountClass();
+    public function getAccountClass(): string;
+
+    public function getAccount($currencyCode): ?AccountInterface;
 
     /**
-     * @param $currencyCode
-     *
-     * @return AccountInterface|null
+     * @return AccountInterface[]|Collection
      */
-    public function getAccount($currencyCode);
+    public function getAccounts(): Collection;
 
-    /**
-     * @return AccountInterface[]|ArrayCollection
-     */
-    public function getAccounts();
-
-    /**
-     * @param AccountInterface[]|ArrayCollection $accounts
-     *
-     * @return $this
-     */
-    public function setAccounts($accounts);
-
-    /**
-     * @param AccountInterface $account
-     *
-     * @return $this
-     */
     public function addAccount(AccountInterface $account);
+
+    public function removeAccount(AccountInterface $account);
 }

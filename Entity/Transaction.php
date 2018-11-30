@@ -3,13 +3,12 @@
 namespace Padam87\AccountBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Money\Money;
 
 /**
  * @ORM\MappedSuperclass()
  */
-abstract class Transaction
+abstract class Transaction implements TransactionInterface
 {
     /**
      * These types will convert any amount to positive
@@ -28,14 +27,14 @@ abstract class Transaction
     /**
      * @var Account
      *
-     * @ORM\ManyToOne(targetEntity=Account::class, inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity=AccountInterface::class, inversedBy="transactions")
      */
     protected $account;
 
     /**
-     * @var int
+     * @var Money
      *
-     * @ORM\Column(type="money")
+     * @ORM\Embedded(class=Money::class)
      */
     protected $amount;
 
@@ -53,76 +52,53 @@ abstract class Transaction
      */
     protected $comment;
 
-    /**
-     * @param Account $account
-     * @param         $amount
-     * @param         $type
-     */
-    public function __construct(Account $account, $amount, $type)
+    public function __construct(Account $account, Money $amount, int $type)
     {
         $this->setAccount($account);
         $this->setType($type);
         $this->setAmount($amount);
     }
 
-    public function isPositive()
+    public function isPositive(): bool
     {
         return in_array($this->getType(), static::$positiveTypes);
     }
 
-    public function isNegative()
+    public function isNegative(): bool
     {
         return in_array($this->getType(), static::$negativeTypes);
     }
 
-    /**
-     * @return Account
-     */
-    public function getAccount()
+    public function getAccount(): AccountInterface
     {
         return $this->account;
     }
 
     /**
-     * @param Account $account
-     *
-     * @return Transaction
+     * @return $this
      */
-    public function setAccount($account)
+    public function setAccount(AccountInterface $account)
     {
         $this->account = $account;
 
         return $this;
     }
 
-    /**
-     * @param bool $plain
-     *
-     * @return Money|int
-     */
-    public function getAmount($plain = false)
+    public function getAmount(): Money
     {
-        if ($plain) {
-            return $this->amount;
-        }
-
-        return new Money($this->amount, $this->getAccount()->getCurrency());
+        return $this->amount;
     }
 
     /**
-     * @param int $amount
-     *
-     * @return Transaction
+     * @return $this
      */
-    public function setAmount($amount)
+    public function setAmount(Money $amount)
     {
-        $amount = abs($amount);
+        $amount = $amount->absolute();
 
-        if (in_array($this->type, static::$negativeTypes)) {
-            $amount = abs($amount) * -1;
-        } elseif (in_array($this->type, static::$positiveTypes)) {
-            $amount = abs($amount);
-        } else {
+        if ($this->isNegative()) {
+            $amount = $amount->negative();
+        } elseif (!$this->isPositive()) {
             throw new \LogicException('Every transaction type must be explicitly marked as positive, or negative');
         }
 
@@ -131,18 +107,13 @@ abstract class Transaction
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
 
     /**
-     * @param int $type
-     *
-     * @return Transaction
+     * @return $this
      */
     public function setType($type)
     {
@@ -157,25 +128,22 @@ abstract class Transaction
 
         $this->type = $type;
 
-        $this->setAmount($this->amount); // re-set the amount to ensure negative / positive amounts
+        if (null !== $this->amount) {
+            $this->setAmount($this->amount); // re-set the amount to ensure negative / positive amounts
+        }
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getComment()
+    public function getComment(): ?string
     {
         return $this->comment;
     }
 
     /**
-     * @param string $comment
-     *
-     * @return Transaction
+     * @return $this
      */
-    public function setComment($comment)
+    public function setComment(?string $comment)
     {
         $this->comment = $comment;
 

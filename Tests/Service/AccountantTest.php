@@ -2,14 +2,9 @@
 
 namespace Padam87\AccountBundle\Tests\Service;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Event\FilterUserResponseEvent;
 use Mockery as m;
 use Money\Currency;
-use Money\Exception\UnknownCurrencyException;
 use Money\Money;
-use Padam87\AccountBundle\EventListener\RegistrationListener;
 use Padam87\AccountBundle\Service\Accountant;
 use Padam87\AccountBundle\Tests\Resources\Entity\Account;
 use Padam87\AccountBundle\Tests\Resources\Entity\User;

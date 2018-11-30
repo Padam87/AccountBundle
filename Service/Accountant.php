@@ -9,24 +9,12 @@ use Padam87\AccountBundle\Entity\AccountInterface;
 
 class Accountant
 {
-    /**
-     * @param AccountHolderInterface $accountHolder
-     * @param Currency               $currency
-     *
-     * @return null|AccountInterface
-     */
-    public function getAccount(AccountHolderInterface $accountHolder, Currency $currency)
+    public function getAccount(AccountHolderInterface $accountHolder, Currency $currency): ?AccountInterface
     {
         return $accountHolder->getAccount($currency->getCode());
     }
 
-    /**
-     * @param AccountHolderInterface $accountHolder
-     * @param Currency               $currency
-     *
-     * @return AccountInterface
-     */
-    public function createAccount(AccountHolderInterface $accountHolder, Currency $currency)
+    public function createAccount(AccountHolderInterface $accountHolder, Currency $currency): AccountInterface
     {
         if ($this->getAccount($accountHolder, $currency) != null) {
             throw new \LogicException(
@@ -49,13 +37,7 @@ class Accountant
         return $account;
     }
 
-    /**
-     * @param AccountHolderInterface $accountHolder
-     * @param Currency               $currency
-     *
-     * @return AccountInterface
-     */
-    public function getOrCreateAccount(AccountHolderInterface $accountHolder, Currency $currency)
+    public function getOrCreateAccount(AccountHolderInterface $accountHolder, Currency $currency): AccountInterface
     {
         if (null === $account = $this->getAccount($accountHolder, $currency)) {
             $account = $this->createAccount($accountHolder, $currency);
@@ -64,36 +46,17 @@ class Accountant
         return $account;
     }
 
-    /**
-     * @param AccountInterface $account
-     *
-     * @return Money
-     */
-    public function getBalance(AccountInterface $account)
+    public function getBalance(AccountInterface $account): Money
     {
         return $account->getBalance();
     }
 
-    /**
-     * By default, this will always return 0.
-     *
-     * You may override it to calculate the users locked balance.
-     *
-     * @param AccountInterface $account
-     *
-     * @return Money
-     */
-    public function getLockedBalance(AccountInterface $account)
+    public function getLockedBalance(AccountInterface $account): Money
     {
         return new Money(0, clone $account->getCurrency());
     }
 
-    /**
-     * @param AccountInterface $account
-     *
-     * @return Money
-     */
-    public function getAvailableBalance(AccountInterface $account)
+    public function getAvailableBalance(AccountInterface $account): Money
     {
         return $this->getBalance($account)->subtract($this->getLockedBalance($account));
     }
