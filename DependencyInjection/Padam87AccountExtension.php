@@ -25,24 +25,8 @@ class Padam87AccountExtension extends Extension implements PrependExtensionInter
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
 
         $container->setParameter('padam87_account_config', $config);
-
-        if ($config['registration_listener']) {
-            if (!isset($bundles['FOSUserBundle'])) {
-                throw new \LogicException('The registration listener feature requires the FOSUserBundle.');
-            }
-
-            $container->setDefinition(
-                'padam87_account.registration_listener',
-                (new Definition(RegistrationListener::class))
-                    ->addTag('kernel.event_subscriber')
-                    ->addArgument(new Reference('doctrine'))
-                    ->addArgument(new Reference('padam87_account.accountant'))
-                    ->addArgument($config)
-            );
-        }
 
         $container->setDefinition(
             'padam87_account.accountant',

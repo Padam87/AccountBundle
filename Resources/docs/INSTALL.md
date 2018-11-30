@@ -14,10 +14,7 @@ padam87_account:
     classes:
         account: AppBundle\Entity\Account
         transaction: AppBundle\Entity\Transaction
-    currencies: ['EUR']
-    registration_listener: true # false by default
 ```
-The registration listener creates accounts for users on registration. Requires the [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
 
 ### Create the entities
 #### Account
