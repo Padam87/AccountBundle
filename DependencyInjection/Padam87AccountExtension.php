@@ -2,8 +2,8 @@
 
 namespace Padam87\AccountBundle\DependencyInjection;
 
-use Padam87\AccountBundle\Entity\Account;
-use Padam87\AccountBundle\Entity\Transaction;
+use Padam87\AccountBundle\Entity\AccountInterface;
+use Padam87\AccountBundle\Entity\TransactionInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -39,8 +39,8 @@ class Padam87AccountExtension extends Extension implements PrependExtensionInter
             [
                 'orm' => [
                     'resolve_target_entities' => [
-                        Account::class => $config['classes']['account'],
-                        Transaction::class => $config['classes']['transaction'],
+                        AccountInterface::class => $config['classes']['account'],
+                        TransactionInterface::class => $config['classes']['transaction'],
                     ],
                 ]
             ]

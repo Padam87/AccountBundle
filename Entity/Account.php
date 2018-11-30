@@ -3,10 +3,10 @@
 namespace Padam87\AccountBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Money\Currency;
 use Money\Money;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\MappedSuperclass()
@@ -21,41 +21,30 @@ abstract class Account implements AccountInterface
     protected $balance;
 
     /**
-     * @var ArrayCollection|Transaction[]
+     * @var Collection|TransactionInterface[]
      *
-     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="account", indexBy="id")
+     * @ORM\OneToMany(targetEntity=TransactionInterface::class, mappedBy="account", indexBy="id")
      * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     protected $transactions;
 
-    /**
-     * @param Currency $currency
-     */
     public function __construct(Currency $currency)
     {
         $this->balance = new Money(0, $currency);
+        $this->transactions = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCurrency()
+    public function getCurrency(): Currency
     {
         return $this->balance->getCurrency();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBalance()
+    public function getBalance(): Money
     {
         return $this->balance;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setBalance(Money $balance)
+    public function setBalance(Money $balance): AccountInterface
     {
         $this->balance = $balance;
 
@@ -63,9 +52,9 @@ abstract class Account implements AccountInterface
     }
 
     /**
-     * @return ArrayCollection|Transaction[]
+     * @return Collection|TransactionInterface[]
      */
-    public function getTransactions()
+    public function getTransactions(): Collection
     {
         return $this->transactions;
     }

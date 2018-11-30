@@ -4,32 +4,19 @@ namespace Padam87\AccountBundle\Entity;
 
 use Money\Currency;
 use Money\Money;
+use Padam87\AccountBundle\EventListener\TransactionListener;
 
 interface AccountInterface
 {
-    /**
-     * @param AccountHolderInterface $accountHolder
-     *
-     * @return $this
-     */
     public function setAccountHolder(AccountHolderInterface $accountHolder);
 
-    /**
-     * @return Currency
-     */
-    public function getCurrency();
+    public function getCurrency(): Currency;
 
-    /**
-     * @return Money
-     */
-    public function getBalance();
+    public function getBalance(): Money;
 
     /**
      * @internal Should only be modified by Transactions, don't call otherwise
-     *
-     * @param Money $balance
-     *
-     * @return $this
+     * @see TransactionListener
      */
     public function setBalance(Money $balance);
 }

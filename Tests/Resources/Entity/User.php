@@ -3,6 +3,7 @@
 namespace Padam87\AccountBundle\Tests\Resources\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Padam87\AccountBundle\Entity\AccountHolderInterface;
 use Padam87\AccountBundle\Entity\AccountInterface;
 
@@ -11,7 +12,7 @@ class User implements AccountHolderInterface
     /**
      * @var ArrayCollection|Account[]
      *
-     * @ORM\OneToMany(targetEntity=Account::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=AccountInterface::class, mappedBy="user")
      */
     protected $accounts;
 
@@ -20,20 +21,12 @@ class User implements AccountHolderInterface
         $this->accounts = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
-    public function getAccountClass()
+    public function getAccountClass(): string
     {
         return Account::class;
     }
 
-    /**
-     * @param string $currencyCode
-     *
-     * @return Account|null
-     */
-    public function getAccount($currencyCode = 'EUR')
+    public function getAccount($currencyCode = 'EUR'): ?AccountInterface
     {
         foreach ($this->accounts as $account) {
             if ($account->getCurrency()->getCode() === $currencyCode) {
@@ -44,36 +37,25 @@ class User implements AccountHolderInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setAccounts($accounts)
+    public function addAccount(AccountInterface $account): self
     {
-        $this->accounts = [];
+        $this->accounts->add($account);
 
-        foreach ($accounts as $account) {
-            $this->addAccount($account);
-        }
+        $account->setAccountHolder($this);
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addAccount(AccountInterface $account)
+    public function removeAccount(AccountInterface $account): self
     {
-        $this->accounts[] = $account;
+        $this->accounts->removeElement($account);
 
-        $account->setAccountHolder($this);
+        $account->setAccountHolder(null);
 
         return $this;
     }

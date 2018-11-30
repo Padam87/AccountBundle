@@ -58,7 +58,7 @@ class TransactionListenerTest extends TestCase
         list($uow, $em, $args) = $this->getBaseMocks(
             $account,
             [
-                new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
+                new Transaction($account, Money::EUR(100), Transaction::TYPE_DEPOSIT),
             ]
         );
 
@@ -81,10 +81,10 @@ class TransactionListenerTest extends TestCase
         list($uow, $em, $args) = $this->getBaseMocks(
             $account,
             [
-                new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
-                new Transaction($account, 250, Transaction::TYPE_DEPOSIT),
-                new Transaction($account, 325, Transaction::TYPE_DEPOSIT),
-                new Transaction($account, 75, Transaction::TYPE_DEPOSIT),
+                new Transaction($account, Money::EUR(100), Transaction::TYPE_DEPOSIT),
+                new Transaction($account, Money::EUR(250), Transaction::TYPE_DEPOSIT),
+                new Transaction($account, Money::EUR(325), Transaction::TYPE_DEPOSIT),
+                new Transaction($account, Money::EUR(75), Transaction::TYPE_DEPOSIT),
             ]
         );
 
@@ -106,7 +106,7 @@ class TransactionListenerTest extends TestCase
         $account->setUser($user);
 
         $transactions = [
-            new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
+            new Transaction($account, Money::EUR(100), Transaction::TYPE_DEPOSIT),
         ];
 
         $uow = m::mock(UnitOfWork::class);
@@ -134,7 +134,7 @@ class TransactionListenerTest extends TestCase
         $account->setUser($user);
 
         $transactions = [
-            new Transaction($account, 100, Transaction::TYPE_DEPOSIT),
+            new Transaction($account, Money::EUR(100), Transaction::TYPE_DEPOSIT),
         ];
 
         $uow = m::mock(UnitOfWork::class);

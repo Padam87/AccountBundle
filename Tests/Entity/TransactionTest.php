@@ -29,8 +29,8 @@ class TransactionTest extends TestCase
         $account = new Account(new Currency('EUR'));
         $account->setUser($user);
 
-        $transaction1 = new Transaction($account, 100, Transaction::TYPE_WITHDRAWAL);
-        $transaction2 = new Transaction($account, -100, Transaction::TYPE_WITHDRAWAL);
+        $transaction1 = new Transaction($account, Money::EUR(100), Transaction::TYPE_WITHDRAWAL);
+        $transaction2 = new Transaction($account, Money::EUR(-100), Transaction::TYPE_WITHDRAWAL);
 
         $this->assertEquals(Money::EUR(-100), $transaction1->getAmount());
         $this->assertEquals(Money::EUR(-100), $transaction2->getAmount());
@@ -45,8 +45,8 @@ class TransactionTest extends TestCase
         $account = new Account(new Currency('EUR'));
         $account->setUser($user);
 
-        $transaction1 = new Transaction($account, 100, Transaction::TYPE_DEPOSIT);
-        $transaction2 = new Transaction($account, -100, Transaction::TYPE_DEPOSIT);
+        $transaction1 = new Transaction($account, Money::EUR(100), Transaction::TYPE_DEPOSIT);
+        $transaction2 = new Transaction($account, Money::EUR(-100), Transaction::TYPE_DEPOSIT);
 
         $this->assertEquals(Money::EUR(100), $transaction1->getAmount());
         $this->assertEquals(Money::EUR(100), $transaction2->getAmount());
@@ -62,6 +62,6 @@ class TransactionTest extends TestCase
         $account = new Account(new Currency('EUR'));
         $account->setUser($user);
 
-        new Transaction($account, 100, Transaction::TYPE_UNKNOWN);
+        new Transaction($account, Money::EUR(100), Transaction::TYPE_UNKNOWN);
     }
 }

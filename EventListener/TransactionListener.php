@@ -6,7 +6,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
-use Padam87\AccountBundle\Entity\Transaction;
+use Padam87\AccountBundle\Entity\TransactionInterface;
 
 class TransactionListener implements EventSubscriber
 {
@@ -26,25 +26,25 @@ class TransactionListener implements EventSubscriber
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
-            if ($entity instanceof Transaction) {
+            if ($entity instanceof TransactionInterface) {
                 $this->updateBalance($entity, $em, $uow);
             }
         }
 
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            if ($entity instanceof Transaction) {
+            if ($entity instanceof TransactionInterface) {
                 throw new \LogicException('A transaction should never be updated. Please create a new transaction.');
             }
         }
 
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
-            if ($entity instanceof Transaction) {
+            if ($entity instanceof TransactionInterface) {
                 throw new \LogicException('A transaction should never be deleted. Please create a new transaction.');
             }
         }
     }
 
-    private function updateBalance(Transaction $transaction, EntityManager $em, UnitOfWork $uow)
+    private function updateBalance(TransactionInterface $transaction, EntityManager $em, UnitOfWork $uow)
     {
         if (null === $account = $transaction->getAccount()) {
             throw new \LogicException('A transaction must have an account specified.');

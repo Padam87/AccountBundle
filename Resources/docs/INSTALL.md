@@ -12,8 +12,8 @@ new Padam87\AccountBundle\Padam87AccountBundle(),
 ```yaml
 padam87_account:
     classes:
-        account: AppBundle\Entity\Account
-        transaction: AppBundle\Entity\Transaction
+        account: App\Entity\Account
+        transaction: App\Entity\Transaction
 ```
 
 ### Create the entities

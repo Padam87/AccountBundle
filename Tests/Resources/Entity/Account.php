@@ -2,11 +2,7 @@
 
 namespace Padam87\AccountBundle\Tests\Resources\Entity;
 
-use Money\Currency;
-use Money\Money;
 use Padam87\AccountBundle\Entity\AccountHolderInterface;
-use Padam87\AccountBundle\Entity\AccountInterface;
-use Padam87\AccountBundle\Entity\UserInterface;
 
 class Account extends \Padam87\AccountBundle\Entity\Account
 {
@@ -26,40 +22,24 @@ class Account extends \Padam87\AccountBundle\Entity\Account
      */
     protected $user;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return Account
-     */
-    public function setUser($user)
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * @param AccountHolderInterface $accountHolder
-     *
-     * @return $this
-     */
-    public function setAccountHolder(AccountHolderInterface $accountHolder)
+    public function setAccountHolder(AccountHolderInterface $accountHolder): self
     {
         return $this->setUser($accountHolder);
     }
